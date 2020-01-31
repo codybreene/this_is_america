@@ -1,4 +1,6 @@
 import {styles} from './mapStyles';
+import { LocationIq } from 'locationiq';
+import {locIqKey} from '../../config/keys'
 
 const country = "United States";
 const mapOptions = {
@@ -32,4 +34,21 @@ export const drawPolygon = (map) => {
     fillOpacity: 0.35
   });
   bermudaTriangle.setMap(map);
+}
+
+const locIq = new LocationIq({
+  token: locIqKey
+})
+
+export const testGeocode = (location) => {
+  locIq.search(location)
+}
+
+export const addMarker = (map) => {
+  // Add the marker at the clicked location, and add the next-available label
+  // from the array of alphabetical characters.
+  const marker = new google.maps.Marker({
+    position: {lat: 31.855981, lng: -99.063266}, 
+    map: map
+  });
 }

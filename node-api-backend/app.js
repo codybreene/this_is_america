@@ -31,30 +31,30 @@ const twit = new Twitter({
   access_token_secret: keys.tokenSecret
 });
 
-io.on("connection", socket => {
-  console.log("inside initial socket connection")
-  stream(socket);
-  socket.on("connection", () => console.log("Client connected"));
-  socket.on("disconnect", () => console.log("Client disconnected"));
-});
+// io.on("connection", socket => {
+//   console.log("inside initial socket connection")
+//   stream(socket);
+//   socket.on("connection", () => console.log("Client connected"));
+//   socket.on("disconnect", () => console.log("Client disconnected"));
+// });
 
-const stream = (socket) => {
-  twit.stream(
-    "statuses/filter",
-    { track: "trump, donald trump, bernie sanders, sanders, elizabeth warren \
-      joe biden, biden, warren" },
-    stream => {
-      console.log("inside twitter stream");
-      stream.on("data", tweet => {
-        if(tweet.place != null || tweet.user.location != null) //filter tweet for location data
-          socket.emit("data", tweet);
-      });
-      stream.on("error", error => {
-        console.log(error);
-      });
-    }
-  );
-}
+// const stream = (socket) => {
+//   twit.stream(
+//     "statuses/filter",
+//     { track: "sanders, biden, warren, buttigieg, bloomberg" },
+//     stream => {
+//       console.log("inside twitter stream");
+//       stream.on("data", tweet => {
+//         //filter tweet for location data
+//         if(tweet.place != null || tweet.user.location != null) 
+//           socket.emit("data", tweet);
+//       });
+//       stream.on("error", error => {
+//         console.log(error);
+//       });
+//     }
+//   );
+// }
 
 //reverse geocode query
 app.get('/tweet_test', (req, res) => {

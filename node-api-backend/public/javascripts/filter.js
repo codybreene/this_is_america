@@ -1,23 +1,31 @@
-export const trumpTweets = {
-  terms: ["trump", "Trump"],
+export const buttigiegTweets = {
+  terms: ["buttigieg", "Buttigieg"],
   tweets: []
 }
+
 export const sandersTweets = {
-  terms: ["Bernie Sanders", "bernie sanders"],
+  terms: ["Sanders", "sanders"],
   tweets: []
 }
-export const bidenTweets = {
+
+export const warrenTweets = {
   terms: ["warren", "Warren"],
   tweets: []
 }
-export const warrenTweets = {
+
+export const bidenTweets = {
   terms: ["Biden", "biden"],
+  tweets: []
+}
+
+export const bloombergTweets = {
+  terms: ["Bloomberg", "bloomberg"],
   tweets: []
 }
 
 const checkTruncated = (tweet, term) => {
   if(tweet.truncated) {
-    if(tweet.extended_tweet.full_text.include(term)) return true
+    if(tweet.extended_tweet.full_text.includes(term)) return true
   }
   return false
 }
@@ -27,7 +35,7 @@ const checkQuote = (tweet, term) => {
     if (checkTruncated(tweet.quoted_status, term)) {
       return true
     } else {
-      if (checkText(tweet.quoted_status.text, term))
+      if (checkText(tweet.quoted_status, term))
       return true
     }
     return false
@@ -36,12 +44,12 @@ const checkQuote = (tweet, term) => {
 }
 
 const checkText = (tweet, term) => {
-  if(tweet.text.include(term)) return true
+  if(tweet.text.includes(term)) return true
   return false
 }
 
 export const filterTweet = (tweet, terms) => {
-  const valid = false
+  let valid = false
   terms.forEach(term => {
     if(checkTruncated(tweet, term) || checkText(tweet, term) || checkQuote(tweet, term)) {
       valid = true
