@@ -1,6 +1,5 @@
 import {styles} from './mapStyles';
-import { LocationIq } from 'locationiq';
-import {locIqKey} from '../../config/keys'
+const keys = require('../../config/keys');
 
 const country = "United States";
 const mapOptions = {
@@ -9,7 +8,6 @@ const mapOptions = {
   draggable: false,
   styles: styles
 };
-
 
 export const initMap = () => {
   const mapDiv = document.getElementById("map-container");
@@ -36,13 +34,9 @@ export const drawPolygon = (map) => {
   bermudaTriangle.setMap(map);
 }
 
-const locIq = new LocationIq({
-  token: locIqKey
-})
-
-export const testGeocode = (location) => {
-  locIq.search(location)
-}
+// export const testGeocode = (location) => {
+//   locationiq.search(location)
+// }
 
 export const addMarker = (map) => {
   // Add the marker at the clicked location, and add the next-available label
