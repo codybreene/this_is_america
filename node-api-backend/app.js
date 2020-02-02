@@ -13,6 +13,15 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+const NodeGeocoder = require("node-geocoder");
+const options = {
+  provider: "openstreetmap",
+  httpAdapter: "https", // Default
+  // apiKey: keys.geocoderKey, // for Mapquest, OpenCage, Google Premier
+  formatter: null // 'gpx', 'string', ...
+};
+const geocoder = NodeGeocoder(options);
+
 //credit to https://github.com/viswesh/Tweeties/ for the socket.io setup and
 //twitter integration
 
@@ -31,29 +40,53 @@ const twit = new Twitter({
   access_token_secret: keys.tokenSecret
 });
 
-// io.on("connection", socket => {
-//   console.log("inside initial socket connection")
-//   stream(socket);
-//   socket.on("connection", () => console.log("Client connected"));
-//   socket.on("disconnect", () => console.log("Client disconnected"));
-// });
+io.on("connection", socket => {
+  console.log("inside initial socket connection")
+  stream(socket);
+  socket.on("connection", () => console.log("Client connected"));
+  socket.on("disconnect", () => console.log("Client disconnected"));
+});
 
-// const stream = (socket) => {
-//   twit.stream(
-//     "statuses/filter",
-//     { track: "sanders, biden, warren, buttigieg, bloomberg" },
-//     stream => {
-//       console.log("inside twitter stream");
-//       stream.on("data", tweet => {
-//         //filter tweet for location data
-//         if(tweet.place != null || tweet.user.location != null) 
-//           socket.emit("data", tweet);
-//       });
-//       stream.on("error", error => {
-//         console.log(error);
-//       });
-//     }
-//   );
+const stream = (socket) => {
+  twit.stream(
+    "statuses/filter",
+    { track: "sanders, biden, warren, buttigieg, bloomberg" },
+    stream => {
+      setTimeout(() => {
+        stream.removeAllListeners("data")
+        console.log("removing all listeners...")
+      }, 10000)
+      console.log("inside twitter stream");
+      stream.on("data", tweet => {
+        //filter tweet for location data
+        if(tweet.user.location != null) {
+          geocoder.geocode(tweet.user.location)
+            .then(res => {
+              const location = { lat: res[0].latitude, lng: res[0].longitude };
+              const tweetObj = {
+                coords: location,
+                text: tweet.text,
+                truncated: tweet.truncated,
+                user: tweet.user,
+                quoted_status: tweet.quoted_status,
+                is_quote_status: tweet.is_quote_status,
+                extended_tweet: tweet.extended_tweet
+              };
+              console.log(tweetObj);
+              socket.emit("data", tweetObj);
+          });
+        }
+      });
+      stream.on("error", error => {
+        console.log(error);
+      });
+    });
+}
+
+//geocode helper
+// const getLatLng = (place) => {
+//   geocoder.geocode(place)
+//     .then(res => res)
 // }
 
 //reverse geocode query

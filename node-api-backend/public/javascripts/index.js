@@ -8,11 +8,11 @@ import {
   bidenTweets, 
   warrenTweets, 
   filterTweet} from './filter'
-import {testGeocode} from '../javascripts/map'
 
 document.addEventListener('DOMContentLoaded', () => {
 
   const map = initMap();
+  // draw marker logic
   const socket = io("http://localhost:8000/");
   const candidates = [
     bloombergTweets,
@@ -52,31 +52,96 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Socket Disconnected");
   });
 
+  const allMarkers = []
+
   // add event listeners to politicians
-  const sandersPic = document.getElementById("bernie")
-  const bloombergPic = document.getElementById("bloomberg")
-  const buttigiegPic = document.getElementById("buttigieg")
-  const warrenPic = document.getElementById("warren")
-  const bidenPic = document.getElementById("biden")
+  const sandersPic = document.getElementById("bernie-pic")
+  console.log(sandersPic)
+  const bloombergPic = document.getElementById("bloomberg-pic")
+  const buttigiegPic = document.getElementById("buttigieg-pic")
+  const warrenPic = document.getElementById("warren-pic")
+  const bidenPic = document.getElementById("biden-pic")
+
+  const delMarkers = (markers) => {
+    markers.forEach( marker => {
+      marker.setMap(null)
+    });
+  }
 
   sandersPic.addEventListener("click", () => {
-    addMarker(map);
-    testGeocode("Bedford, NY")
+    console.log("you clicked bernie")
+    console.log(`existing markers: ${allMarkers}`)
+    delMarkers(allMarkers);
+    sandersTweets.tweets.forEach((tweet, index) => {
+      setTimeout(() => {
+        let marker = new google.maps.Marker({
+          position: tweet.coords,
+          title: tweet.text
+        })
+        console.log(`marker: ${marker}`)
+        allMarkers.push(marker);
+        marker.setMap(map)}, index*200)
+    })
   })
 
   bloombergPic.addEventListener("click", () => {
-
+    console.log(`existing markers: ${allMarkers}`)
+    delMarkers(allMarkers);
+    bloombergTweets.tweets.forEach(tweet => {
+      setInterval(() => {
+        let marker = new google.maps.Marker({
+          position: tweet.coords,
+          title: tweet.text
+        });
+        marker.setMap(map);
+      }, 200);
+        allMarkers.push(marker);
+    });
   })
 
   buttigiegPic.addEventListener("click", () => {
-
+    console.log(`existing markers: ${allMarkers}`)
+    delMarkers(allMarkers);
+    buttigiegTweets.tweets.forEach(tweet => {
+      setInterval(() => {
+        let marker = new google.maps.Marker({
+          position: tweet.coords,
+          title: tweet.text
+        });
+        marker.setMap(map);
+      }, 200);
+        allMarkers.push(marker);
+    });
   })
 
   warrenPic.addEventListener("click", () => {
-
+    console.log(`existing markers: ${allMarkers}`)
+    delMarkers(allMarkers);
+    warrenTweets.tweets.forEach(tweet => {
+      setInterval(() => {
+        let marker = new google.maps.Marker({
+          position: tweet.coords,
+          title: tweet.text
+        });
+        marker.setMap(map);
+      }, 200);
+        allMarkers.push(marker);
+    });
   })
 
   bidenPic.addEventListener("click", () => {
-
+    console.log(`existing markers: ${allMarkers}`);
+    delMarkers(allMarkers);
+    bidenTweets.tweets.forEach(tweet => {
+      setInterval(() => {
+        let marker = new google.maps.Marker({
+          position: tweet.coords,
+          title: tweet.text
+        });
+        marker.setMap(map);
+      }, 200);
+        allMarkers.push(marker);
+    });
   })
-})
+
+});
