@@ -29,8 +29,8 @@ app.get('/', (request, res) => {
   res.sendFile(path.join(__dirname, './public/index.html'))
 })
 
-http.listen(8000, () => {
-  console.log('listening on 8000...this the websocket test')
+http.listen(PORT, () => {
+  console.log(`listening on ${PORT}...this the websocket test`)
 })
 
 const twit = new Twitter({
