@@ -40,6 +40,35 @@ const twit = new Twitter({
   access_token_secret: keys.tokenSecret
 });
 
+// app.get('/bernie_tweets', (req, res) => {
+//   twit
+//     .get("search/tweets.json", { q: "bernie sanders", count: 10 })
+//     .then(result => {
+//       const tweets = [];
+//       const count = 0
+//       const promises = result.statuses.forEach(tweet => {
+//         if (tweet.user.location !== "") {
+//           geocoder.geocode(tweet.user.location).then(res => {
+//             const location = { lat: res[0].latitude, lng: res[0].longitude };
+//             const tweetObj = {
+//               coords: location,
+//               text: tweet.text,
+//               truncated: tweet.truncated,
+//               user: tweet.user,
+//               quoted_status: tweet.quoted_status,
+//               is_quote_status: tweet.is_quote_status,
+//               extended_tweet: tweet.extended_tweet
+//             };
+//             tweets.push(tweetObj);
+//             if(tweets.length === count) return tweets
+//             count+=1
+//           });
+//         }
+//       })
+//       Promise.all(promises).then(res => console.log(res))
+//     })
+// })
+
 io.on("connection", socket => {
   console.log("inside initial socket connection")
   stream(socket);
@@ -53,9 +82,9 @@ const stream = (socket) => {
     { track: "sanders, biden, warren, buttigieg, bloomberg" },
     stream => {
       setTimeout(() => {
-        stream.removeAllListeners("data")
         console.log("removing all listeners...")
-      }, 10000)
+        stream.removeAllListeners("data")
+      }, 15000)
       console.log("inside twitter stream");
       stream.on("data", tweet => {
         //filter tweet for location data
@@ -88,43 +117,3 @@ const stream = (socket) => {
 //   geocoder.geocode(place)
 //     .then(res => res)
 // }
-
-//reverse geocode query
-app.get('/tweet_test', (req, res) => {
-  twit
-    .get(
-      "geo/reverse_geocode.json",
-      {"lat":"37.781157", "long":"-122.398720"}
-    )
-    .then(result => res.send(result))
-    .catch(err => console.log(err));
-})
-
-//get place tweets
-app.get('/tweet_place', (req, res) => {
-  twit
-    .get(
-      "geo/reverse_geocode.json",
-      {"lat":"37.781157", "long":"-122.398720"}
-    )
-    .then(result => res.send(result))
-    .catch(err => console.log(err));
-})
-
-// const url =
-//   "https://api.twitter.com/1.1/search/tweets.json?q=&geocode=29.7604,-95.3698,100mi&count=5&locale=en";
-// app.get('/tweets',
-//   (req, res) => {
-//     axios.get(
-//       url,
-//       {headers: headers}
-//     ).then(tweets => res.json(tweets.data.statuses))
-//       .catch(err => console.log(err))
-//   })
-
-
-
-// app.listen(PORT, () => {
-//   console.log(__dirname);
-//   console.log(`listening on ${PORT}`)
-// })
