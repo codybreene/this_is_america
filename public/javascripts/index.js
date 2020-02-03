@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const map = initMap();
   // draw marker logic
-  const socket = io("http://localhost:8000/");
+  // const socket = io("http://localhost:8000/");
+  const socket = io("https://democratic-candidates.herokuapp.com/");
   const candidates = [
     bloombergTweets,
     buttigiegTweets, 
