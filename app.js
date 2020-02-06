@@ -44,7 +44,7 @@ const twit = new Twitter({
 //   twit
 //     .get("search/tweets.json", { q: "bernie sanders", count: 10 })
 //     .then(result => {
-//       const tweets = [];
+//       const promises = [];
 //       const count = 0
 //       const promises = result.statuses.forEach(tweet => {
 //         if (tweet.user.location !== "") {
@@ -69,48 +69,96 @@ const twit = new Twitter({
 //     })
 // })
 
-io.on("connection", socket => {
-  console.log("inside initial socket connection")
-  stream(socket);
-  socket.on("connection", () => console.log("Client connected"));
-  socket.on("disconnect", () => console.log("Client disconnected"));
-});
-
-const stream = (socket) => {
-  twit.stream(
-    "statuses/filter",
-    { track: "sanders, biden, warren, buttigieg, bloomberg" },
-    stream => {
-      setTimeout(() => {
-        console.log("removing all listeners...")
-        stream.removeAllListeners("data")
-      }, 15000)
-      console.log("inside twitter stream");
-      stream.on("data", tweet => {
-        //filter tweet for location data
-        if(tweet.user.location != null) {
-          geocoder.geocode(tweet.user.location)
-            .then(res => {
-              const location = { lat: res[0].latitude, lng: res[0].longitude };
-              const tweetObj = {
-                coords: location,
-                text: tweet.text,
-                truncated: tweet.truncated,
-                user: tweet.user,
-                quoted_status: tweet.quoted_status,
-                is_quote_status: tweet.is_quote_status,
-                extended_tweet: tweet.extended_tweet
-              };
-              console.log(tweetObj);
-              socket.emit("data", tweetObj);
-          });
+app.get('/bernie_tweets', (request, result) => {
+  twit
+    .get("search/tweets.json", { q: "bernie sanders", count: 10 })
+    .then(tweets => {
+      const promises = [];
+      const tweetsFull = [];
+      const tweetsTrunc = [];
+      tweets.statuses.forEach(tweet => {
+        if (tweet.user.location !== "") {
+          tweetsFull.push(tweet)
+          promises.push(geocoder.geocode(tweet.user.location));
         }
-      });
-      stream.on("error", error => {
-        console.log(error);
-      });
-    });
-}
+      })
+      Promise.all(promises).then(res => {
+        for (let i = 0; i < promises.length; i++) {
+          if (res[i][0]) {
+            let location = {lat: res[i][0].latitude, lng: res[i][0].longitude}
+            let tweetObj = {
+              coords: location,
+              text: tweetsFull[0].text,
+              truncated: tweetsFull[0].truncated,
+              user: tweetsFull[0].user,
+              quoted_status: tweetsFull[0].quoted_status,
+              is_quote_status: tweetsFull[0].is_quote_status,
+              extended_tweet: tweetsFull[0].extended_tweet
+            };
+            tweetsTrunc.push(tweetObj);
+            console.log("before sending results to frontend")
+          }
+        }
+        return tweetsTrunc
+      }).then(tweetsTrunc => result.json(tweetsTrunc))
+    })
+  })
+//         const location = { lat: res[0].latitude, lng: res[0].longitude };
+//         const tweetObj = {
+//           coords: location,
+//           text: tweet.text,
+//           truncated: tweet.truncated,
+//           user: tweet.user,
+//           quoted_status: tweet.quoted_status,
+//           is_quote_status: tweet.is_quote_status,
+//           extended_tweet: tweet.extended_tweet
+//         };
+//         tweets.push(tweetObj)
+//     })
+// })
+
+// io.on("connection", socket => {
+//   console.log("inside initial socket connection")
+//   stream(socket);
+//   socket.on("connection", () => console.log("Client connected"));
+//   socket.on("disconnect", () => console.log("Client disconnected"));
+// });
+
+// const stream = (socket) => {
+//   twit.stream(
+//     "statuses/filter",
+//     { track: "sanders, biden, warren, buttigieg, bloomberg" },
+//     stream => {
+//       setTimeout(() => {
+//         console.log("removing all listeners...")
+//         stream.removeAllListeners("data")
+//       }, 15000)
+//       console.log("inside twitter stream");
+//       stream.on("data", tweet => {
+//         //filter tweet for location data
+//         if(tweet.user.location != null) {
+//           geocoder.geocode(tweet.user.location)
+//             .then(res => {
+//               const location = { lat: res[0].latitude, lng: res[0].longitude };
+//               const tweetObj = {
+//                 coords: location,
+//                 text: tweet.text,
+//                 truncated: tweet.truncated,
+//                 user: tweet.user,
+//                 quoted_status: tweet.quoted_status,
+//                 is_quote_status: tweet.is_quote_status,
+//                 extended_tweet: tweet.extended_tweet
+//               };
+//               console.log(tweetObj);
+//               socket.emit("data", tweetObj);
+//           });
+//         }
+//       });
+//       stream.on("error", error => {
+//         console.log(error);
+//       });
+//     });
+// }
 
 //geocode helper
 // const getLatLng = (place) => {

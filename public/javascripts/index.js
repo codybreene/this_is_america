@@ -11,6 +11,9 @@ import {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  axios.get('/bernie_tweets')
+    .then(res => console.log(res))
+
   const map = initMap();
   // draw marker logic
   // const socket = io("http://localhost:8000/");
