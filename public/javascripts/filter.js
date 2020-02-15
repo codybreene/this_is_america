@@ -1,25 +1,30 @@
-export const buttigiegTweets = {
-  terms: ["buttigieg", "Buttigieg"],
+export const buttigieg = {
+  query: "pete buttigieg",
   tweets: []
 }
 
-export const sandersTweets = {
-  terms: ["Sanders", "sanders"],
+export const sanders = {
+  query: "bernie sanders",
   tweets: []
 }
 
-export const warrenTweets = {
-  terms: ["warren", "Warren"],
+export const warren = {
+  query: "elizabeth warren",
   tweets: []
 }
 
-export const bidenTweets = {
-  terms: ["Biden", "biden"],
+export const biden = {
+  query: "joe biden",
   tweets: []
 }
 
-export const bloombergTweets = {
-  terms: ["Bloomberg", "bloomberg"],
+export const bloomberg = {
+  query: "mike bloomberg",
+  tweets: []
+}
+
+export const klobuchar = {
+  query: "amy klobuchar",
   tweets: []
 }
 

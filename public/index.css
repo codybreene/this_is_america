@@ -15,4 +15,5 @@
 
 .nominees {
   display: flex;
+  flex-wrap: wrap;
 }

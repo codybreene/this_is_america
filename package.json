@@ -13,8 +13,7 @@
   },
   "scripts": {
     "build": "webpack --watch",
-    "start": "node app.js",
-    "start:debug": "DEBUG=* node app.js"
+    "start": "DEBUG=express:* node app.js"
   },
   "dependencies": {
     "axios": "^0.18.1",
@@ -34,6 +33,7 @@
     "passport": "^0.4.1",
     "sass-loader": "^6.0.7",
     "socket.io": "^2.3.0",
+    "spinthatshit": "^1.0.4",
     "twitter": "^1.7.1",
     "webpack": "^3.4.1"
   },
