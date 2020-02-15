@@ -69,9 +69,9 @@ const twit = new Twitter({
 //     })
 // })
 
-app.get('/bernie_tweets', (request, result) => {
+app.get('/politician_tweets', (request, result) => {
   twit
-    .get("search/tweets.json", { q: "bernie sanders", count: 10 })
+    .get("search/tweets.json", { q: request.query.query, count: 20 })
     .then(tweets => {
       const promises = [];
       const tweetsFull = [];
@@ -88,19 +88,18 @@ app.get('/bernie_tweets', (request, result) => {
             let location = {lat: res[i][0].latitude, lng: res[i][0].longitude}
             let tweetObj = {
               coords: location,
-              text: tweetsFull[0].text,
-              truncated: tweetsFull[0].truncated,
-              user: tweetsFull[0].user,
-              quoted_status: tweetsFull[0].quoted_status,
-              is_quote_status: tweetsFull[0].is_quote_status,
-              extended_tweet: tweetsFull[0].extended_tweet
+              text: tweetsFull[i].text,
+              truncated: tweetsFull[i].truncated,
+              user: tweetsFull[i].user,
+              quoted_status: tweetsFull[i].quoted_status,
+              is_quote_status: tweetsFull[i].is_quote_status,
+              extended_tweet: tweetsFull[i].extended_tweet
             };
             tweetsTrunc.push(tweetObj);
-            console.log("before sending results to frontend")
           }
         }
         return tweetsTrunc
-      }).then(tweetsTrunc => result.json(tweetsTrunc))
+      }).then(tweetsTrunc => result.send(tweetsTrunc))
     })
   })
 //         const location = { lat: res[0].latitude, lng: res[0].longitude };
