@@ -69,9 +69,9 @@ const twit = new Twitter({
 //     })
 // })
 
-app.get('/politician_tweets', (request, result) => {
+app.get('/get_tweets', (request, result) => {
   twit
-    .get("search/tweets.json", { q: request.query.query, count: 20 })
+    .get("search/tweets.json", { q: request.query.query, count: 50 })
     .then(tweets => {
       const promises = [];
       const tweetsFull = [];

@@ -8,17 +8,16 @@
     <link rel="stylesheet" type="text/css" href="index.css">
   </head>
   <body>
-    <h1>This is America</h1>
+    <h1>Tweets Around the Globe</h1>
     <div class="loader01"></div>
     <div class="container">
       <div id='map-container' ref='map'></div>
-      <div class="nominees">
-        <div id="bernie"><img id="bernie-pic" src="assets/sanders2.jpg"></div>
-        <div id="bloomberg"><img id="bloomberg-pic" src="assets/bloomberg2.jpg"></div>
-        <div id="buttigieg"><img id="buttigieg-pic" src="assets/buttigieg2.jpg"></div>
-        <div id="warren"><img id="warren-pic" src="assets/warren2.jpg"></div>
-        <div id="biden"><img id="biden-pic" src="assets/biden2.jpg"></div>
-      </div>
+      <form class="nominees" id="search-form">
+        <label>Enter Search Term:
+          <input type="text" id="search-term">
+        </label>
+        <button type="submit">Plot Tweets</button>
+      </form>
     </div>
     <main id='main'></main>
 
