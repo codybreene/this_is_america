@@ -2,24 +2,32 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Twearch</title>
     <script type="text/javascript" src="./bundle.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOmTIOJTO00gl7HJUuF_Nm690auZqhDsE"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
   </head>
   <body>
-    <h1>Tweets Around the Globe</h1>
-    <div class="loader01"></div>
+    <h1>Twearch</h1>
     <div class="container">
-      <div id='map-container' ref='map'></div>
       <form class="nominees" id="search-form">
         <label>Enter Search Term:
           <input type="text" id="search-term">
         </label>
-        <button type="submit">Plot Tweets</button>
+        <button id="search-tweets">Search Tweets</button>
+        <button id="search-users">Search Users</button>
       </form>
+      <table id="tweet-table">
+        <tbody>
+        </tbody>
+      </table>
+      <a id="dlink" style="display:none;"></a>
+      <input 
+        style="display:none;" 
+        id="export-table" 
+        type="button" 
+        value="Export to Excel">
     </div>
     <main id='main'></main>
-
   </body>
 </html>

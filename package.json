@@ -29,11 +29,13 @@
     "node-fetch": "^1.7.3",
     "node-geocoder": "^3.25.0",
     "node-sass": "^4.13.1",
+    "node-table-to-csv": "^0.1.0",
     "oauth-1.0a": "^2.2.6",
     "passport": "^0.4.1",
     "sass-loader": "^6.0.7",
     "socket.io": "^2.3.0",
     "spinthatshit": "^1.0.4",
+    "tableexport": "^5.2.0",
     "twitter": "^1.7.1",
     "webpack": "^3.4.1"
   },

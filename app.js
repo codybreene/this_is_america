@@ -4,8 +4,8 @@ const app = express();
 const http = httpServer.createServer(app);
 const path = require('path');
 const Twitter = require('twitter');
-const socketio = require("socket.io");
-const io = socketio(http);
+// const socketio = require("socket.io");
+// const io = socketio(http);
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 const PORT = process.env.PORT || 8000; // process.env accesses heroku's environment variables
@@ -13,14 +13,14 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const NodeGeocoder = require("node-geocoder");
-const options = {
-  provider: "openstreetmap",
-  httpAdapter: "https", // Default
-  // apiKey: keys.geocoderKey, // for Mapquest, OpenCage, Google Premier
-  formatter: null // 'gpx', 'string', ...
-};
-const geocoder = NodeGeocoder(options);
+// const NodeGeocoder = require("node-geocoder");
+// const options = {
+//   provider: "openstreetmap",
+//   httpAdapter: "https", // Default
+//   // apiKey: keys.geocoderKey, // for Mapquest, OpenCage, Google Premier
+//   formatter: null // 'gpx', 'string', ...
+// };
+// const geocoder = NodeGeocoder(options);
 
 //credit to https://github.com/viswesh/Tweeties/ for the socket.io setup and
 //twitter integration
@@ -71,37 +71,17 @@ const twit = new Twitter({
 
 app.get('/get_tweets', (request, result) => {
   twit
-    .get("search/tweets.json", { q: request.query.query, count: 50 })
-    .then(tweets => {
-      const promises = [];
-      const tweetsFull = [];
-      const tweetsTrunc = [];
-      tweets.statuses.forEach(tweet => {
-        if (tweet.user.location !== "") {
-          tweetsFull.push(tweet)
-          promises.push(geocoder.geocode(tweet.user.location));
-        }
-      })
-      Promise.all(promises).then(res => {
-        for (let i = 0; i < promises.length; i++) {
-          if (res[i][0]) {
-            let location = {lat: res[i][0].latitude, lng: res[i][0].longitude}
-            let tweetObj = {
-              coords: location,
-              text: tweetsFull[i].text,
-              truncated: tweetsFull[i].truncated,
-              user: tweetsFull[i].user,
-              quoted_status: tweetsFull[i].quoted_status,
-              is_quote_status: tweetsFull[i].is_quote_status,
-              extended_tweet: tweetsFull[i].extended_tweet
-            };
-            tweetsTrunc.push(tweetObj);
-          }
-        }
-        return tweetsTrunc
-      }).then(tweetsTrunc => result.send(tweetsTrunc))
+    //structure the twitter api call
+    .get("search/tweets.json", { q: request.query.query, count: 1000 })
+    .then(tweets => result.send(tweets))
     })
-  })
+
+app.get('/get_users', (request, result) => {
+  twit
+    //structure the twitter api call
+    .get("users/search.json", { q: request.query.query, count: 1000 })
+    .then(tweets => result.send(tweets))
+    })
 //         const location = { lat: res[0].latitude, lng: res[0].longitude };
 //         const tweetObj = {
 //           coords: location,
