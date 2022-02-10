@@ -28,7 +28,7 @@
     "net": "^1.0.2",
     "node-fetch": "^1.7.3",
     "node-geocoder": "^3.25.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "node-table-to-csv": "^0.1.0",
     "oauth-1.0a": "^2.2.6",
     "passport": "^0.4.1",
