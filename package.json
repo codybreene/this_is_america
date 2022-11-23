@@ -33,7 +33,7 @@
     "oauth-1.0a": "^2.2.6",
     "passport": "^0.4.1",
     "sass-loader": "^6.0.7",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "spinthatshit": "^1.0.4",
     "tableexport": "^5.2.0",
     "twitter": "^1.7.1",
